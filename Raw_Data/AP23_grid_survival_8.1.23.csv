@@ -1,0 +1,17 @@
+﻿spot,G1,G2,G4,G5,D1,D2,D4,D5,S1,S2,S4,S5
+A1,healthy,dead,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,sick
+A2,healthy,healthy,dead,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,dead
+A3,healthy,healthy,sick,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,dead
+A4,healthy,healthy,sick,healthy,healthy,healthy,sick,healthy,healthy,healthy,healthy,healthy
+B1,healthy,dead,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy
+B2,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy
+B3,healthy,healthy,healthy,healthy,dead,healthy,healthy,healthy,healthy,healthy,healthy,healthy
+B4,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy
+C1,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy
+C2,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy
+C3,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy
+C4,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,dead,healthy,healthy
+D1,healthy,empty,healthy,sick,healthy,healthy,healthy,healthy,healthy,healthy,healthy,sick
+D2,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy
+D3,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy
+D4,healthy,healthy,healthy,empty,empty,healthy,healthy,empty,healthy,healthy,healthy,healthy
