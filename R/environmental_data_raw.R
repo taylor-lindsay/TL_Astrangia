@@ -17,45 +17,45 @@ library(ggplot2)
 # Master data set 
 master <- read.csv('~/Desktop/GITHUB/TL_Astrangia/Environmental_Data/Environmental_Data_Merged.csv')
 
-#A <- read.csv('~/Desktop/GITHUB/TL_Astrangia/Environmental_Data/21741107-A_7.5.23.csv') %>%
-#  .[,c(1:4)] 
-#colnames(A)[2] ="datetime"
-#colnames(A)[3] ="temp"
-#colnames(A)[4] ="light"
+A <- read.csv('~/Desktop/GITHUB/TL_Astrangia/Environmental_Data/21741107-A-9.20.23.csv') %>%
+  .[,c(1:4)] 
+colnames(A)[2] ="datetime"
+colnames(A)[3] ="temp"
+colnames(A)[4] ="light"
 
-#B <- read.csv('~/Desktop/GITHUB/TL_Astrangia/Environmental_Data/21741109-B_7.5.23.csv') %>%
- # .[,c(1:4)] 
-#colnames(B)[2] ="datetime"
-#colnames(B)[3] ="temp"
-#colnames(B)[4] ="light"
+B <- read.csv('~/Desktop/GITHUB/TL_Astrangia/Environmental_Data/21741109-B-9.20.23.csv') %>%
+  .[,c(1:4)] 
+colnames(B)[2] ="datetime"
+colnames(B)[3] ="temp"
+colnames(B)[4] ="light"
 
-#C <- read.csv('~/Desktop/GITHUB/TL_Astrangia/Environmental_Data/21741108-C_7.5.23.csv') %>%
- # .[,c(1:4)] 
-#colnames(C)[2] ="datetime"
-#colnames(C)[3] ="temp"
-#colnames(C)[4] ="light"
+C <- read.csv('~/Desktop/GITHUB/TL_Astrangia/Environmental_Data/21741108-C-9.20.23.csv') %>%
+  .[,c(1:4)] 
+colnames(C)[2] ="datetime"
+colnames(C)[3] ="temp"
+colnames(C)[4] ="light"
 
 # Merge loggers  ----------------------------------------------------------
 
-#merged <- full_join(A[,2:4],B[,2:4], by="datetime",suffix = c(".a", ".b"))
-#merged <- full_join(merged,C[,2:4], by="datetime",suffix = c(".c", ".c"))
+merged <- full_join(A[,2:4],B[,2:4], by="datetime",suffix = c(".a", ""))
+merged <- full_join(merged,C[,2:4], by="datetime",suffix = c(".b",".c"))
 
 # clean ends 
-#merged_clean <- merged[-c(1:12,1449:1456),]          #####
+merged_clean <- merged[-c(1:15,4030:4037),]          #####
 
 # append to master 
-#appended <- rbind(master, merged_clean)
+appended <- rbind(master, merged_clean)
 
 # write csv 
-#write.csv(appended, '~/Desktop/GITHUB/TL_Astrangia/Environmental_Data/Environmental_Data_Merged.csv')
+write.csv(appended, '~/Desktop/GITHUB/TL_Astrangia/Environmental_Data/Environmental_Data_Merged.csv')
 
 
 #### Manipulate dataset 
 
 # make it datetime format 
-master$datetime <- mdy_hm(master$datetime,tz=Sys.timezone())
+appended$datetime <- mdy_hm(appended$datetime,tz=Sys.timezone())
 
-long <- pivot_longer(master,cols = c(temp.a,temp.b,temp.c,light.a,light.b,light.c),
+long <- pivot_longer(appended,cols = c(temp.a,temp.b,temp.c,light.a,light.b,light.c),
                           names_to = "treatment", values_to = "value") %>%
   separate(.,treatment, c("variable","treatment"))
 
@@ -87,6 +87,7 @@ ggplot(long_temp, aes(x=treatment, y=value)) +
 daily_temp_plot <- ggplot(daily_temp, aes(x=datetime,y=mean_temp, color=treatment)) +
   geom_line() +
   labs(y= "Mean Daily Temperature (˚C)", x = "Date 2023")
+daily_temp_plot
 
 ggsave("daily_temp.jpg", plot = daily_temp_plot, path = '~/Desktop/GITHUB/TL_Astrangia/Environmental_Data/Results/')
 
@@ -101,6 +102,7 @@ ggplot(long_light, aes(x=treatment, y=value)) +
 daily_light_plot <- ggplot(daily_light, aes(x=datetime,y=mean_light, color=treatment)) +
   geom_line() +
   labs(y= "Mean Daily Light (lum)", x = "Date")
+daily_light_plot
 
 ggsave("daily_light.jpg", plot = daily_light_plot, path = '~/Desktop/GITHUB/TL_Astrangia/Environmental_Data/Results/')
 
