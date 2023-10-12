@@ -2,10 +2,10 @@
 A1,healthy,dead,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy
 A2,healthy,healthy,empty,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,dead
 A3,healthy,healthy,healthy,sick,healthy,healthy,dead,healthy,healthy,healthy,healthy,dead
-A4,healthy,healthy,healthy,dead,healthy,healthy,sick,healthy,healthy,sick,healthy,healthy
-B1,healthy,healthy,healthy,healthy,empty-moved?,healthy,healthy,healthy,healthy,healthy,healthy,healthy
+A4,healthy,healthy,healthy,dead,healthy,healthy,healthy,healthy,healthy,sick,healthy,healthy
+B1,healthy,healthy,healthy,healthy,empty,healthy,healthy,healthy,healthy,healthy,healthy,healthy
 B2,healthy,healthy,healthy,healthy,healthy,healthy,empty,healthy,healthy,healthy,healthy,healthy
-B3,healthy,healthy,healthy,healthy,dead,healthy,healthy,healthy,healthy,dead,healthy,healthy
+B3,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,dead,healthy,healthy
 B4,dead,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy
 C1,healthy,healthy,healthy,sick,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy
 C2,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy
@@ -13,5 +13,5 @@ C3,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healt
 C4,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy
 D1,healthy,empty,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,sick
 D2,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,sick
-D3,healthy,healthy,healthy,healthy,healthy,healthy,healthy,sick,healthy,healthy,healthy,healthy
-D4,healthy,healthy,healthy,empty,empty,healthy,healthy,empty,healthy,healthy,healthy,healthy
+D3,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy
+D4,healthy,healthy,healthy,empty,healthy,healthy,healthy,empty,healthy,healthy,healthy,healthy

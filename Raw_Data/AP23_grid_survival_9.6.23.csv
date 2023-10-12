@@ -3,7 +3,7 @@ A1,healthy,dead,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,
 A2,healthy,healthy,empty,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,dead
 A3,healthy,healthy,healthy,healthy,healthy,healthy,dead,healthy,healthy,sick,healthy,dead
 A4,healthy,sick,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy
-B1,healthy,healthy,healthy,healthy,empty,healthy,healthy,healthy,healthy,healthy,healthy,healthy
+B1,healthy,healthy,healthy,healthy,empty-moved?,healthy,healthy,healthy,healthy,healthy,healthy,healthy
 B2,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy
 B3,healthy,healthy,healthy,healthy,dead,healthy,healthy,healthy,healthy,dead,healthy,healthy
 B4,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy,healthy

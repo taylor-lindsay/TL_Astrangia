@@ -17,8 +17,8 @@ library(ggplot2)
 
 # Data -------------------------------------------------------------------
 
-x <- read.csv('~/Desktop/GITHUB/TL_Astrangia/Quadrat_Sampling/quad_hobo_21706002-X_2023-09-29.csv')
-z <- read.csv('~/Desktop/GITHUB/TL_Astrangia/Quadrat_Sampling/quad_hobo_21706004-Z_2023-09-29.csv')
+x <- read.csv('~/Desktop/GITHUB/TL_Astrangia/Quadrat_Sampling/quad_hobo_21706002-X-2023-10-03.csv')
+z <- read.csv('~/Desktop/GITHUB/TL_Astrangia/Quadrat_Sampling/quad_hobo_21706004-Z-2023-10-03.csv')
 #x <- read.csv('~/Desktop/GITHUB/TL_Astrangia/Quadrat_Sampling/quad_hobo_21706005-V_2023-09-29.csv')
 #z <- read.csv('~/Desktop/GITHUB/TL_Astrangia/Quadrat_Sampling/quad_hobo_21706006-W_2023-09-29.csv')
 
@@ -40,8 +40,8 @@ merged <- rbind(x,z)
 # specific quadrat values 
 
 new <- merged %>%
-  filter(.$Date.Time..EDT. >= "09/29/2023 09:21:00") %>%
-  filter(.$Date.Time..EDT. <= "09/29/2023 09:23:00") %>%
+  filter(.$Date.Time..EDT. >= "10/03/2023 09:29:10") %>%
+  filter(.$Date.Time..EDT. <= "10/03/2023 09:33:00") %>%
   mutate(zscore = (.$Ch.2...Light....lux. - mean(.$Ch.2...Light....lux.))/sd(.$Ch.2...Light....lux.)) # %>% filter(abs(zscore)<2) #%>% filter(Ch.2...Light....lux. >= 3000)
 
 ggplot(new, aes(x= Date.Time..EDT., y=new$Ch.2...Light....lux.)) +
@@ -53,7 +53,7 @@ mean(new$Ch.1...Temperature.....C.)
 # MERGE TO MASTER DATA SET ------------------------------------------------
 
 # once the data has been entered for today, merge it to the master 
-raw <- read.csv('~/Desktop/GITHUB/TL_Astrangia/Quadrat_Sampling/quad_data_raw_2023-9-29.csv') %>%
+raw <- read.csv('~/Desktop/GITHUB/TL_Astrangia/Quadrat_Sampling/quad_data_raw_2023-10-03.csv') %>%
   filter(quality_control == "good") %>%
   select(date,algae,corrected_depth,mean_sym,mean_apo,light,temp)
 
