@@ -15,7 +15,7 @@ library(ggplot2)
 # Data -------------------------------------------------------------------
 
 # Master data set 
-master <- read.csv('~/Desktop/GITHUB/TL_Astrangia/Environmental_Data/Environmental_Data_Merged.csv')
+master <- read.csv('~/Desktop/GITHUB/TL_Astrangia/Environmental_Data/Environmental_Data_Merged(C).csv')
 
 A <- read.csv('~/Desktop/GITHUB/TL_Astrangia/Environmental_Data/21741107-A-9.20.23.csv') %>%
   .[,c(1:4)] 
@@ -47,15 +47,16 @@ merged_clean <- merged[-c(1:15,4030:4037),]          #####
 appended <- rbind(master, merged_clean)
 
 # write csv 
-write.csv(appended, '~/Desktop/GITHUB/TL_Astrangia/Environmental_Data/Environmental_Data_Merged.csv')
+#write.csv(appended, '~/Desktop/GITHUB/TL_Astrangia/Environmental_Data/Environmental_Data_Merged.csv')
 
 
-#### Manipulate dataset 
+# full dataset  -----------------------------------------------------------
+
 
 # make it datetime format 
-appended$datetime <- mdy_hm(appended$datetime,tz=Sys.timezone())
+master$datetime <- mdy_hm(master$datetime,tz=Sys.timezone())
 
-long <- pivot_longer(appended,cols = c(temp.a,temp.b,temp.c,light.a,light.b,light.c),
+long <- pivot_longer(master,cols = c(temp.a,temp.b,temp.c,light.a,light.b,light.c),
                           names_to = "treatment", values_to = "value") %>%
   separate(.,treatment, c("variable","treatment"))
 
@@ -105,6 +106,55 @@ daily_light_plot <- ggplot(daily_light, aes(x=datetime,y=mean_light, color=treat
 daily_light_plot
 
 ggsave("daily_light.jpg", plot = daily_light_plot, path = '~/Desktop/GITHUB/TL_Astrangia/Environmental_Data/Results/')
+
+
+
+# functional data set  ----------------------------------------------------
+
+long_light_full <- long_light %>%
+  filter(.$datetime <= "2023-08-08")
+  
+long_temp_full <- long_temp %>%
+  filter(.$datetime <= "2023-08-08")
+
+
+daily_light_full <- daily_light %>%
+  filter(.$datetime <= "2023-08-08")
+
+daily_temp_full <- daily_temp %>%
+  filter(.$datetime <= "2023-08-08")
+
+# full temp data 
+ggplot(long_temp_full, aes(x=datetime,y=value, color=treatment, group=3)) +
+  geom_line()
+
+# box plot 
+ggplot(long_temp_full, aes(x=treatment, y=value)) +
+  geom_boxplot()
+
+daily_temp_plot <- ggplot(daily_temp_full, aes(x=datetime,y=mean_temp, color=treatment)) +
+  geom_line() +
+  labs(y= "Mean Daily Temperature (˚C)", x = "Date 2023")
+daily_temp_plot
+
+ggsave("daily_temp_functional.jpg", plot = daily_temp_plot, path = '~/Desktop/GITHUB/TL_Astrangia/Environmental_Data/Results/')
+
+##### Light 
+ggplot(long_light_full, aes(x=datetime,y=value, color=treatment, group=3)) +
+  geom_line()
+
+# box plot 
+ggplot(long_light_full, aes(x=treatment, y=value)) +
+  geom_boxplot()
+
+daily_light_plot <- ggplot(daily_light_full, aes(x=datetime,y=mean_light, color=treatment)) +
+  geom_line() +
+  labs(y= "Mean Daily Light (lum)", x = "Date")
+daily_light_plot
+
+ggsave("daily_light_functional.jpg", plot = daily_light_plot, path = '~/Desktop/GITHUB/TL_Astrangia/Environmental_Data/Results/')
+
+
 
 
 # Stats -------------------------------------------------------------------
