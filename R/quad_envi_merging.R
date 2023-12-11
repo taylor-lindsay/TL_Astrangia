@@ -227,7 +227,26 @@ ggplot(master_ratios) +
   geom_point(aes(x=corrected_depth,y=ratio)) +
   geom_smooth(aes(x=corrected_depth,y=ratio),span=0.5)
            
-# PLOT 
+
+# AP percent cover ---------------------------------------------------------
+
+# mean per bin 
+percent_cover_bins <- master %>%
+  group_by(bins) %>%
+  summarise_at(c("mean_apo", "mean_sym", "algae"), mean, na.rm = TRUE) %>% 
+  mutate(other=100-(mean_apo+mean_sym+algae)) %>%
+  pivot_longer(cols = c(mean_apo, mean_sym, algae), names_to = "type", values_to = "value")
+
+percent_cover <- ggplot(percent_cover_bins, aes(bins, weight = value, fill=factor(type, levels=c("other", "algae", "mean_apo","mean_sym")))) +
+  geom_bar() +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(y= "Percent Cover", x="Depth Bins (ft)", fill="Cover Type")
+
+percent_cover
+
+ggsave('~/Desktop/GITHUB/TL_Astrangia/Quadrat_Results/Plot_TLAP_percent_cover_stacked_bar.jpg', percent_cover, width = 10, height = 6)
+
+
 
 
 
