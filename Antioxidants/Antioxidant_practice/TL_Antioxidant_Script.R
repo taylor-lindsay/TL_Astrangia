@@ -8,6 +8,8 @@ editor_options:
 # load packages
 library(tidyverse)
 library(broom)
+library(ggpubr) 
+library(ggplot2)
 
 # write function to read files 
 read_tac <- function(file) {
@@ -20,7 +22,8 @@ read_tac <- function(file) {
 }
 
 # List data files (taken from CHL sheet, just ignore that part)
-chl_path <- "~/Desktop/Antioxidant_practice/data/"                        # Path to chlorophyll data directory     #####
+chl_path <- "~/Desktop/GITHUB/TL_Astrangia/Antioxidants/AP23_Antioxidants/"                        # Path to chlorophyll data directory     #####
+#chl_path <- "~/Desktop/GITHUB/TL_Astrangia/Antioxidants/Antioxidant_practice/data/"                        # Path to chlorophyll data directory     #####
 all_chl_files <- list.files(path = chl_path, pattern = "*.csv")          # List all files in directory
 chl_platemaps <- list.files(path = chl_path, pattern = "platemap")       # List platemap files
 chl_data_files <- setdiff(all_chl_files, chl_platemaps)                  # List absorbance data files
@@ -51,15 +54,18 @@ standards <- tribble(
 std_curve <- df2 %>%
   unnest(merged) %>%
   separate(file, into = c("initials", "protocol", "plate", "type"), remove = FALSE) %>%
-  #unite(plate, initials, protocol, plate, type, sep = "_") %>%
-  filter(grepl("standard", colony_id)) %>%
-  select(type, well, colony_id, wavelength, absorbance) %>%
-  rename(std = colony_id) %>% 
+  filter(grepl("standard", sample_id)) %>%
+  select(type, well, sample_id, wavelength, absorbance) %>%
+  rename(std = sample_id) %>% 
   mutate(std = as.numeric(str_sub(std, -1))) %>% 
-  spread(type, absorbance) %>%
+  group_by(std, type, well) %>%
+  summarise(mean_absorbance = mean(absorbance)) %>%
+  spread(type, mean_absorbance) %>%
   group_by(std) %>%
-  summarise(mean_Buffer = mean(Buffer), mean_Cu=mean(Cu)) %>%
-  mutate(net_abs = mean_Cu - mean_Buffer) 
+  summarise(mean_Buffer = mean(buffer, na.rm = TRUE),
+            mean_Cu = mean(Cu, na.rm = TRUE)) %>%
+  mutate(net_abs = mean_Cu - mean_Buffer)
+
 
 std_curve$std <- std_curve$std %>% 
   as.numeric(gsub("0", "10", .)) 
@@ -90,12 +96,12 @@ std_curve_plot + geom_line(data = fitted, aes(x = net_abs, y = .fitted)) +
 tac <- df2 %>%
   unnest(merged) %>%
   separate(file, into = c("initials", "protocol", "plate", "type"), remove = FALSE) %>%
-  filter(!grepl("standard", colony_id)) %>%
-  filter(!is.na(colony_id)) %>%
-  select(type, well, colony_id, wavelength, absorbance) %>% 
+  filter(!grepl("standard", sample_id)) %>%
+  filter(!is.na(sample_id)) %>%
+  select(type, well, sample_id, wavelength, absorbance) %>% 
   spread(type, absorbance) %>%
-  group_by(colony_id) %>%
-  summarise(mean_Buffer = mean(Buffer), mean_Cu=mean(Cu)) %>%
+  group_by(sample_id) %>%
+  summarise(mean_Buffer = mean(buffer), mean_Cu=mean(Cu)) %>%
   # Use standard curve to predict concentrations based on sample absorbance values
   mutate(net_abs = mean_Cu - mean_Buffer,
          uae.mmol.L = map_dbl(net_abs, ~ predict(lmod, newdata = data.frame(net_abs = .))))
@@ -104,9 +110,10 @@ std_curve_plot +
   labs(title = "All samples projected on standard curve")
 
 # Tissue homogenate volume data
-metadata <- read_csv("~/Desktop/Antioxidant_practice/TLAP_Surface_Area_PRACTICE.csv") %>% select(c(1,7:8))
+metadata <- read_csv("~/Desktop/GITHUB/TL_Astrangia/Raw_data/AP23_ALL_Results.csv") %>% 
+  select(sample_id, cage, treatment, full_treatment, Apo_Sym, airbrush_volume, surface_area, prot_ug)
+         
 # Protein data
-#prot <- read_csv("output/1_protein.csv")
 # Join homogenate volumes with sample metadata
 #metadata <- full_join(metadata, homog_vols) %>%
   #full_join(prot)%>%
@@ -115,36 +122,48 @@ metadata <- read_csv("~/Desktop/Antioxidant_practice/TLAP_Surface_Area_PRACTICE.
 # Join TAC data with metadata
 tac_results <- left_join(tac, metadata)%>%
   mutate(cre.umol.L = uae.mmol.L * 2189) %>%   # Convert to CRE (see product manual) per unit sample volume
-  mutate(cre.umol = cre.umol.L * (volume / 1000))  # Convert to CRE per coral by multiplying by homog. vol.
-         #cre.umol.mgprot = cre.umol / (prot_ug / 1000))  # Convert to CRE per mg protein by dividing by total protein
+  mutate(cre.umol = cre.umol.L * (airbrush_volume / 1000)) %>% # Convert to CRE per coral by multiplying by homog. vol.
+  mutate(cre.umol.mgprot = cre.umol / (prot_ug / 1000)) %>% # Convert to CRE per mg protein by dividing by total protein
+  filter(cre.umol >= 0)
 
-### this is where I stopped before 
 
-# Summarize results
-tac %>% 
-  drop_na(species) %>%
-  group_by(species) %>%
-  summarise(across(cre.umol.mgprot, list(mean = mean, min = min, max = max), na.rm = TRUE))
+
+#summary table 
+summary <- tac_results %>% 
+  group_by(full_treatment) %>% 
+  summarise(
+    count = n(),
+    AO_mean = mean(cre.umol),
+    AO_sd = sd(cre.umol),
+    AO_prot_mean = mean(cre.umol.mgprot),
+    AO_prot_sd = sd(cre.umol.mgprot))
 
 # Write data to output file
-tac<-tac %>%
-  filter(!is.na(species)) %>%
-  select(colony_id, cre.umol.L, cre.umol.mgprot) %>%
-  group_by(colony_id)%>%
-  summarise(cre.umol.L=mean(cre.umol.L), cre.umol.mgprot=mean(cre.umol.mgprot)) %>% #average values by colony 
-  left_join(.,metadata)%>% #add metadata back into file
-  select(colony_id, species, site, cre.umol.L, cre.umol.mgprot) %>%
-  mutate(timepoint="timepoint1")%>%
-  write_csv(., path = "output/1_antioxidant_capacity.csv")
+fin <- tac_results %>% 
+  select(sample_id, cre.umol, cre.umol.mgprot) %>%
+  write_csv(., file = "~/Desktop/GITHUB/TL_Astrangia/Raw_Data/AP23_Results_Antioxidants.csv")
 
+# Summarize results
+ggplot(tac_results) +
+  geom_boxplot(aes(treatment, cre.umol.mgprot, color=Apo_Sym)) +
+  labs(x = "", y = "Copper Reducing Equivalents (µmol/mg protein)",
+       title = "Total antixodidant capacity") + 
+  stat_compare_means(comparisons = treatment_comparisons, method = "wilcox.test", 
+                     symnum.args = list(cutpoints = c(0, 0.001 ,0.01, 0.05, Inf), symbols = c("***", "**", "*", "")))
+
+ggplot(tac_results, aes(treatment, cre.umol, color=Apo_Sym)) +
+  geom_boxplot()
+
+tac_results %>% 
+  group_by(treatment) %>%
+  summarise(across(cre.umol, list(mean = mean, min = min, max = max), na.rm = TRUE))
 
 # Plot results by species and site
 # Plot all data points with mean ± se
-tacplot <- tac %>%
-  filter(!is.na(species)) %>%
-  ggplot(aes(x = site, y = cre.umol.mgprot, color = species)) +
-  facet_wrap(~species)  +
-  coord_cartesian(ylim = c(0, 1))+
+tacplot <- tac_results %>%
+  filter(!is.na(cre.umol.mgprot)) %>%
+  ggplot(aes(x = full_treatment, y = cre.umol.mgprot, color = Apo_Sym)) +
+  #coord_cartesian(ylim = c(0, 1))+
   labs(x = "", y = "Copper Reducing Equivalents (µmol/mg protein)",
        title = "Total antixodidant capacity") +
   geom_jitter(width = 0.1) +                                            # Plot all points

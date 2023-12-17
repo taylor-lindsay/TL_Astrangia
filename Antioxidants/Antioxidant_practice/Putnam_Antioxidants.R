@@ -5,7 +5,7 @@ editor_options:
   chunk_output_type: console
 ---
   
-  ```{r setup, include=FALSE}
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ## install packages if you dont already have them
 if (!require("tidyverse")) install.packages("tidyverse")
