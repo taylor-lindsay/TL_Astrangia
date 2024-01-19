@@ -1,9 +1,5 @@
----
-  title: "Total Antioxidant Capacity (TAC) analysis"
-output: html_document
-editor_options: 
-  chunk_output_type: console
----
+#title: "Total Antioxidant Capacity (TAC) analysis"
+
 
 # load packages
 library(tidyverse)
@@ -124,9 +120,8 @@ tac_results <- left_join(tac, metadata)%>%
   mutate(cre.umol.L = uae.mmol.L * 2189) %>%   # Convert to CRE (see product manual) per unit sample volume
   mutate(cre.umol = cre.umol.L * (airbrush_volume / 1000)) %>% # Convert to CRE per coral by multiplying by homog. vol.
   mutate(cre.umol.mgprot = cre.umol / (prot_ug / 1000)) %>% # Convert to CRE per mg protein by dividing by total protein
-  filter(cre.umol >= 0)
-
-
+  filter(cre.umol >= 0) %>%
+  filter(!is.na(Apo_Sym))
 
 #summary table 
 summary <- tac_results %>% 
@@ -141,11 +136,14 @@ summary <- tac_results %>%
 # Write data to output file
 fin <- tac_results %>% 
   select(sample_id, cre.umol, cre.umol.mgprot) %>%
-  write_csv(., file = "~/Desktop/GITHUB/TL_Astrangia/Raw_Data/AP23_Results_Antioxidants.csv")
+  write_csv(., file = "~/Desktop/GITHUB/TL_Astrangia/Raw_Data/AP23_Results_Antioxidants_full.csv")
+
+# set comparisons 
+treatment_comparisons <- list(c("apo_deep","sym_deep"), c("apo_control","sym_control"), c("apo_shade","sym_shade"))
 
 # Summarize results
 ggplot(tac_results) +
-  geom_boxplot(aes(treatment, cre.umol.mgprot, color=Apo_Sym)) +
+  geom_boxplot(aes(full_treatment, cre.umol, group=full_treatment)) +
   labs(x = "", y = "Copper Reducing Equivalents (µmol/mg protein)",
        title = "Total antixodidant capacity") + 
   stat_compare_means(comparisons = treatment_comparisons, method = "wilcox.test", 

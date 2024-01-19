@@ -34,7 +34,7 @@ master <- read.csv('~/Desktop/GITHUB/TL_Astrangia/Raw_Data/AP23_Raw_master.csv')
 SA <- read.csv('~/Desktop/GITHUB/TL_Astrangia/Raw_Data/AP23_Surface_Area.csv') %>%
   select(sample_id, surface_area)
 
-AO <- read.csv('~/Desktop/GITHUB/TL_Astrangia/Antioxidants/AP23_Antioxidants_results.csv')
+AO <- read.csv('~/Desktop/GITHUB/TL_Astrangia/Raw_Data/AP23_Results_Antioxidants_full.csv')
 
 CHL <- read.csv('~/Desktop/GITHUB/TL_Astrangia/Raw_Data/AP23_Results_CHL.csv') %>%
   select(!X)

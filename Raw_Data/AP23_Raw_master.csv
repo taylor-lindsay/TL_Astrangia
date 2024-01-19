@@ -1,7 +1,7 @@
 sample,spot,cage,sample_id,Apo_Sym,treatment,full_treatment,Date_Deployed,Date_Collected,Notes,airbrush_date,airbrush_volume,Initials
-68,A2,D1,D1-A2-68,?,deep,NA,NA,2023.10.10,,2023.11.16,12.5,TL
-183,A1,D1,D1-A1-183,?,deep,NA,NA,2023.10.10,,2023.11.27,12.5,TL
-29,A2,S1,S1-A2-29,?,shade,NA,NA,2023.10.09,,2023.11.16,14.5,TL
+68,A2,D1,D1-A2-68,NA,deep,NA,NA,2023.10.10,,2023.11.16,12.5,TL
+183,A1,D1,D1-A1-183,NA,deep,NA,NA,2023.10.10,,2023.11.27,12.5,TL
+29,A2,S1,S1-A2-29,NA,shade,NA,NA,2023.10.09,,2023.11.16,14.5,TL
 2,B2,D1,D1-B2-2,APO,deep,apo_deep,2023.06.21,2023.10.10,,2023.11.27,9.5,TL
 8,A3,D1,D1-A3-8,APO,deep,apo_deep,2023.06.21,2023.10.10,,2023.11.28,6,HLE
 32,B4,D1,D1-B4-32,APO,deep,apo_deep,2023.06.23,2023.10.10,,2023.11.28,8.5,TL
